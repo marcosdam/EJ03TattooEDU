@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.marcosledesma.ej03tattooedu.NewCitaActivity;
 import com.marcosledesma.ej03tattooedu.R;
+import com.marcosledesma.ej03tattooedu.configuraciones.Configuraciones;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,6 +41,9 @@ public class EditCitaActivity extends AppCompatActivity {
         posicion = getIntent().getExtras().getInt("POS");
 
         inicializaInterfaz();
+        rellenaInformacion();
+
+        final LocalDate hoy = LocalDate.now();
 
         swAutorizado.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -61,18 +65,17 @@ public class EditCitaActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                LocalDate hoy = LocalDate.now();
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 try {
-                    Date fecha = simpleDateFormat.parse(s.toString());
+                    Date fecha = Configuraciones.simpleDateFormat.parse(s.toString());
                     LocalDate fechaNacimiento = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     if (hoy.getYear() - fechaNacimiento.getYear() < 18) {
                         swAutorizado.setVisibility(View.VISIBLE);
-                        swAutorizado.setChecked(true);
+                        btnGuardar.setEnabled(false);
                     } // else (comprobar mes etc)
                     else{
                         swAutorizado.setVisibility(View.GONE);
                         swAutorizado.setChecked(false);
+                        btnGuardar.setEnabled(true);
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -89,10 +92,10 @@ public class EditCitaActivity extends AppCompatActivity {
                     CitasTattoo citasTattoo = new CitasTattoo();
                     citasTattoo.setNombre(txtNombre.getText().toString());
                     citasTattoo.setApellido(txtApellidos.getText().toString());
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
                     try {
-                        citasTattoo.setFechaNacimiento(sdf.parse(txtFechaNacimiento.getText().toString()));
-                        citasTattoo.setFechaCita(sdf.parse(txtFechaCita.getText().toString()));
+                        citasTattoo.setFechaNacimiento(Configuraciones.simpleDateFormat.parse(txtFechaNacimiento.getText().toString()));
+                        citasTattoo.setFechaCita(Configuraciones.simpleDateFormat.parse(txtFechaCita.getText().toString()));
                         if (txtAdelanto.getText().toString().isEmpty())
                             citasTattoo.setAdelanto(0);
                         else
@@ -129,6 +132,20 @@ public class EditCitaActivity extends AppCompatActivity {
         });
 
     }
+
+    private void rellenaInformacion() {
+        txtNombre.setText(citasTattoo.getNombre());
+        txtApellidos.setText(citasTattoo.getApellido());
+        txtFechaNacimiento.setText(Configuraciones.simpleDateFormat.format(citasTattoo.getFechaNacimiento()));
+        txtFechaCita.setText(Configuraciones.simpleDateFormat.format(citasTattoo.getFechaCita()));
+        txtAdelanto.setText(String.valueOf(citasTattoo.getAdelanto()));
+        if (citasTattoo.isAutorizado()){
+            swAutorizado.setVisibility(View.VISIBLE);
+            swAutorizado.setChecked(citasTattoo.isAutorizado());
+        }
+        swColor.setChecked(citasTattoo.isColor());
+    }
+
     private void inicializaInterfaz() {
         txtNombre = findViewById(R.id.txtNombreCita);
         txtApellidos = findViewById(R.id.txtApellidosCita);

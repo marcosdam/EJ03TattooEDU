@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.marcosledesma.ej03tattooedu.R;
+import com.marcosledesma.ej03tattooedu.configuraciones.Configuraciones;
 import com.marcosledesma.ej03tattooedu.modelos.CitasTattoo;
 
 import java.text.SimpleDateFormat;
@@ -22,6 +23,7 @@ public class AdapterCitasTattoo extends ArrayAdapter<CitasTattoo> {
     private Context context;
     private int resource;
     private ArrayList<CitasTattoo> objects;
+    private SimpleDateFormat simpleDateFormat;
 
     public AdapterCitasTattoo(@NonNull Context context, int resource, @NonNull ArrayList<CitasTattoo> objects) {
         super(context, resource, objects);
@@ -29,6 +31,8 @@ public class AdapterCitasTattoo extends ArrayAdapter<CitasTattoo> {
         this.context = context;
         this.resource = resource;
         this.objects = objects;
+
+        simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
     }
 
     // Añadir método getView
@@ -44,8 +48,8 @@ public class AdapterCitasTattoo extends ArrayAdapter<CitasTattoo> {
         TextView txtFechaCita = fila.findViewById(R.id.txtFechaFila);
 
         txtNombre.setText(citasTattoo.getNombre());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        txtFechaCita.setText(simpleDateFormat.format(citasTattoo.getFechaCita()));
+        // Cogemos simpleDateFormat de la clase Configuraciones
+        txtFechaCita.setText(Configuraciones.simpleDateFormat.format(citasTattoo.getFechaCita()));
 
         return fila;
     }

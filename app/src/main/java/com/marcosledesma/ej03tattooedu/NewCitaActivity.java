@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.marcosledesma.ej03tattooedu.configuraciones.Configuraciones;
 import com.marcosledesma.ej03tattooedu.modelos.CitasTattoo;
 
 import java.text.ParseException;
@@ -34,6 +35,8 @@ public class NewCitaActivity extends AppCompatActivity {
 
         inicializaInterfaz();
 
+        final LocalDate hoy = LocalDate.now();
+
         txtFechaNacimiento.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -47,18 +50,18 @@ public class NewCitaActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                LocalDate hoy = LocalDate.now();
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 try {
-                    Date fecha = simpleDateFormat.parse(s.toString());
+                    Date fecha = Configuraciones.simpleDateFormat.parse(s.toString());
                     LocalDate fechaNacimiento = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     if (hoy.getYear() - fechaNacimiento.getYear() < 18) {
                         swAutorizado.setVisibility(View.VISIBLE);
-                        swAutorizado.setChecked(true);
+                        swAutorizado.setChecked(false);
+                        btnGuardar.setEnabled(false);
                     } // else (comprobar mes etc)
                     else{
                         swAutorizado.setVisibility(View.GONE);
                         swAutorizado.setChecked(false);
+                        btnGuardar.setEnabled(true);
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -82,10 +85,10 @@ public class NewCitaActivity extends AppCompatActivity {
                     CitasTattoo citasTattoo = new CitasTattoo();
                     citasTattoo.setNombre(txtNombre.getText().toString());
                     citasTattoo.setApellido(txtApellidos.getText().toString());
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
                     try {
-                        citasTattoo.setFechaNacimiento(sdf.parse(txtFechaNacimiento.getText().toString()));
-                        citasTattoo.setFechaCita(sdf.parse(txtFechaCita.getText().toString()));
+                        citasTattoo.setFechaNacimiento(Configuraciones.simpleDateFormat.parse(txtFechaNacimiento.getText().toString()));
+                        citasTattoo.setFechaCita(Configuraciones.simpleDateFormat.parse(txtFechaCita.getText().toString()));
                         if (txtAdelanto.getText().toString().isEmpty())
                             citasTattoo.setAdelanto(0);
                         else

@@ -34,6 +34,14 @@
         android:hint=" Fecha de nacimiento (dd/mm/aaaa)"
         android:inputType="date" />
 
+    <Switch
+        android:id="@+id/swAutorizadoCita"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:text="Menor Autorizado"
+        android:textAlignment="textEnd" />
+
     <EditText
         android:id="@+id/txtFechaCitaCita"
         android:layout_width="match_parent"
@@ -61,14 +69,6 @@
         android:textAlignment="textEnd"
         android:textOff="Tattoo en Negro"
         android:textOn="Tattoo a Color" />
-
-    <Switch
-        android:id="@+id/swAutorizadoCita"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:text="Menor Autorizado"
-        android:textAlignment="textEnd" />
 
     <LinearLayout
         android:layout_width="match_parent"
